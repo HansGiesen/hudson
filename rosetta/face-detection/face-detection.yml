@@ -1,0 +1,77 @@
+include: ../../cfg.yml
+
+# Name of project and program for the tuning database
+project_name: rosetta
+program_name: face-detection
+
+# Prefix used for jobs in grid engine
+job_name: face-detection
+
+# Generated executable file
+exe_file: face_detect.elf
+
+# Top-level function of accelerator
+accel_func: face_detect
+
+# Directory with all sources that must be copied for a local run
+src_dir: src
+
+# HLS source files
+hls_src_files:
+- sdsoc/face_detect.cpp
+
+# HLS header files
+hls_hdr_files:
+- sdsoc/face_detect.h
+
+# Other C/C++ Source files
+src_files:
+- host/face_detect_host.cpp
+- host/utils.cpp
+- host/check_result.cpp
+- host/image.cpp
+
+# Generated include file with allocation functions
+inc_file: host/hudson.h
+
+# Optional script to generate source files
+src_gen: sdsoc/gen_pipelines.py
+
+# Compiler options
+cflags: '-DSDSOC'
+
+# Linker options
+ldflags: ''
+
+# Add debug symbols
+debug: true
+
+# Optimization level
+opt_level: 3
+
+# Command-line arguments for run on platform
+run_args: '-o output.ppm'
+    
+# Timeouts in minutes
+timeouts:
+  presynth: 120
+  synth:    120
+  impl:     180
+  run:      10
+  
+# Memory requirements in GB
+max_mem:
+  presynth: 4
+  synth:    32
+  impl:     32
+  run:      1
+
+# List of arrays that are passed to or from accelerators
+arrays:
+  face_detect:
+    inData: {size: "IMAGE_WIDTH", alloc: alloc_input, free: free_input}
+
+# User-defined parameters
+params:
+  PIPELINE_CNT: {type: Integer, args: '1, 4'}
+

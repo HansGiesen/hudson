@@ -1,0 +1,74 @@
+include: ../../cfg.yml
+
+# Name of project and program for the tuning database
+project_name: rosetta
+program_name: spam-filter
+
+# Prefix used for jobs in grid engine
+job_name: spam-filter
+
+# Generated executable file
+exe_file: SgdLR.elf
+
+# Top-level function of accelerator
+accel_func: SgdLR
+
+# Directory with all sources that must be copied for a local run
+src_dir: src
+
+# HLS source files
+hls_src_files:
+- sdsoc/sgd.cpp
+
+# HLS header files
+hls_hdr_files:
+- sdsoc/sgd.h
+
+# Other C/C++ Source files
+src_files:
+- host/spam_filter.cpp
+- host/check_result.cpp
+- host/utils.cpp
+
+# Generated include file with allocation functions
+inc_file: host/hudson.h
+
+# Compiler options
+cflags: '-DSDSOC'
+
+# Linker options
+ldflags: ''
+
+# Add debug symbols
+debug: true
+
+# Optimization level
+opt_level: 3
+
+# Command-line arguments for run on platform
+run_args: '-p .'
+    
+# Timeouts in minutes
+timeouts:
+  presynth: 120
+  synth:    120
+  impl:     120
+  run:      10
+  
+# Memory requirements in GB
+max_mem:
+  presynth: 4
+  synth:    32
+  impl:     32
+  run:      1
+
+# List of arrays that are passed to or from accelerators
+arrays:
+  SgdLR:
+    data:  {size: "NUM_FEATURES * NUM_TRAINING / D_VECTOR_SIZE", alloc: alloc_data, free: free_data}
+    label: {size: "NUM_TRAINING / L_VECTOR_SIZE", alloc: alloc_label, free: free_label}
+    theta: {size: "NUM_FEATURES / F_VECTOR_SIZE", alloc: alloc_theta, free: free_theta}
+
+# User-defined parameters
+params:
+  PAR_FACTOR: {type: PowerOfTwo, args: '1, 1024'}

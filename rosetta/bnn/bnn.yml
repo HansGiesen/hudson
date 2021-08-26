@@ -1,0 +1,94 @@
+include: ../../cfg.yml
+
+# Name of project and program for the tuning database
+project_name: rosetta
+program_name: bnn
+
+# Prefix used for jobs in grid engine
+job_name: bnn
+
+# Generated executable file
+exe_file: accel_test_bnn.exe
+
+# Top-level function of accelerator
+accel_func: top
+
+# Directory with all sources that must be copied for a local run
+src_dir: cpp
+
+# HLS source files
+hls_src_files:
+- accel/Accel.cpp
+
+# HLS header files
+hls_hdr_files:
+- accel/Accel.h
+
+# Other C/C++ Source files
+src_files:
+- accel/accel_test_bnn.cpp
+- accel/AccelPrint.cpp
+- accel/AccelSchedule.cpp
+- accel/AccelTest.cpp
+- accel/Dense.cpp
+- accel/InputConv.cpp
+- utils/Common.cpp
+- utils/Timer.cpp
+- utils/DataIO.cpp
+- utils/ParamIO.cpp
+- utils/ZipIO.cpp
+
+# Optional script to generate source files
+src_gen: accel/generate_source.py
+
+# Compiler options
+cflags: '-DHLS_COMPILE -I utils -I {project_dir}/lib/{platform}/zlib'
+
+# Linker options
+ldflags: '-L {project_dir}/lib/{platform}/minizip -L {project_dir}/lib/{platform}/zlib -lminizip -laes -lz'
+
+# Add debug symbols
+debug: true
+
+# Optimization level
+opt_level: 3
+
+# Command-line arguments for run on platform
+run_args: '. 100'
+    
+# Timeouts in minutes
+timeouts:
+  presynth: 480
+  # Build pipeline for Pynq times out, so I increased the timeout temporarily.
+  # synth:    120
+  synth:    240
+  impl:     120
+  run:      10
+  
+# Memory requirements in GB
+max_mem:
+  presynth: 8
+  synth:    32
+  impl:     32
+  run:      1
+
+# List of arrays that are passed to or from accelerators
+arrays:
+
+# User-defined parameters
+params:
+  CONVOLVERS_0:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  CONVOLVERS_1:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  CONVOLVERS_2:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  CONVOLVERS_3:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  CONVOLVERS_4:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  CONVOLVERS_5:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  CONVOLVERS_6:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  CONVOLVERS_7:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  CONVOLVERS_8:    {type: PowerOfTwo, args: '1, 16, prior="inc"'}
+  WEIGHTS_IN_BRAM: {type: Boolean}
+  PIPELINE:        {type: Boolean}
+  BIN_CONV_CNT:    {type: Integer, args: '1, 5'}
+  BIN_DENSE_CNT:   {type: Integer, args: '1, 3'}
+  WT_MEM_SIZE:     {type: TrueLogInteger, args: '1024, 1048576'}
+  BATCH_SIZE:      {type: LogInteger, args: '1, 256'}

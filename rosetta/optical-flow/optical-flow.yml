@@ -1,0 +1,94 @@
+include: ../../cfg.yml
+
+# Name of project and program for the tuning database
+project_name: rosetta
+program_name: optical-flow
+
+# Prefix used for jobs in grid engine
+job_name: optical-flow
+
+# Generated executable file
+exe_file: optical_flow.elf
+
+# Top-level function of accelerator
+accel_func: optical_flow
+
+# Directory with all sources that must be copied for a local run
+src_dir: src
+
+# HLS source files
+hls_src_files:
+- sdsoc/optical_flow.cpp
+
+# HLS header files
+hls_hdr_files:
+- sdsoc/optical_flow.h
+
+# Other C/C++ Source files
+src_files:
+- host/optical_flow_host.cpp
+- host/utils.cpp
+- host/check_result.cpp
+- imageLib/Convert.cpp
+- imageLib/Convolve.cpp
+- imageLib/flowIO.cpp
+- imageLib/Image.cpp
+- imageLib/ImageIO.cpp
+- imageLib/RefCntMem.cpp
+
+# Generated include file with allocation functions
+inc_file: host/hudson.h
+
+# Compiler options
+cflags: '-DSDSOC -I imageLib'
+
+# Linker options
+ldflags: ''
+
+# Add debug symbols
+debug: true
+
+# Optimization level
+opt_level: 3
+
+# Command-line arguments for run on platform
+run_args: '-p current -o output.flo'
+
+# Whether to run C-simulation before a build.
+csim: True
+
+# Command-line arguments for C-simulation
+csim_args: '-p {project_dir}/datasets/current -o output.flo'
+    
+# Timeouts in minutes
+timeouts:
+  presynth: 1440
+  synth:    1440
+  impl:     1440
+  run:      10
+  
+# Memory requirements in GB
+max_mem:
+  presynth: 4
+  synth:    32
+  impl:     32
+  run:      1
+
+# List of arrays that are passed to or from accelerators
+arrays:
+  optical_flow:
+    input:  {size: "INPUT_LENGTH",  alloc: alloc_input,  free: free_input}
+    output: {size: "OUTPUT_LENGTH", alloc: alloc_output, free: free_output}
+
+# User-defined parameters
+params:
+  PAR_FACTOR:        {type: PowerOfTwo,     args: '1, 2'}
+  PIX_WIDTH:         {type: TrueLogInteger, args: '16, 32'}
+  OUTER_WIDTH:       {type: TrueLogInteger, args: '16, 32'}
+  TENSOR_WIDTH:      {type: TrueLogInteger, args: '16, 32'}
+  NOM_WIDTH:         {type: TrueLogInteger, args: '32, 64'}
+  DENOM_WIDTH:       {type: TrueLogInteger, args: '32, 64'}
+  GRAD_FILT_WIDTH:   {type: TrueLogInteger, args: '8, 32'}
+  TENSOR_FILT_WIDTH: {type: TrueLogInteger, args: '8, 32'}
+  VEL_WIDTH:         {type: PowerOfTwo,     args: '16, 32'}
+  VEL_INT_WIDTH:     {type: TrueLogInteger, args: '8, 32'}

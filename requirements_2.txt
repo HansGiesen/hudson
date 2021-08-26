@@ -1,0 +1,8 @@
+fn==0.4.3
+MySQL-python==1.2.4
+numpy==1.16.4
+PyYAML==5.4.1
+scikit-learn==0.20.3
+scipy==1.2.2
+SQLAlchemy==0.8.2
+

@@ -1,0 +1,52 @@
+digraph bnn
+{
+  graph [fontsize = 18, rankdir = LR];
+  node [fontsize = 18, shape = box, style = filled, height = 0];
+  edge [fontsize = 18];
+
+  input [shape = none, style = "", label = "Input"];
+  output [shape = none, style = "", label = "Output"];
+  {input; output; rank = same}
+
+  dmem [label = "Data memory", fillcolor = "#d9ead3"]
+
+  subgraph cluster_0
+  {
+    rank = same;
+    label = "Fixed-point\nconvolution";
+    fillcolor = "#fff2cc";
+    style = filled;
+    fu_0 [label = "Functional unit", fillcolor = "#d9d2e9"];
+  }
+  subgraph cluster_1
+  {
+    rank = same;
+    label = "Binary\nconvolution";
+    fillcolor = "#fce5cd";
+    style = filled;
+    fu_1 [label = "Functional unit", fillcolor = "#d9d2e9"];
+  }
+  subgraph cluster_2
+  {
+    rank = same;
+    label = "Binary fully-\nconnected";
+    fillcolor = "#f4cccc";
+    style = filled;
+    fu_2 [label = "Functional unit", fillcolor = "#d9d2e9"];
+  }
+  
+  wtmem [label = "Weight constants", fillcolor = "#a4c2f4"]
+
+  input -> dmem;
+  dmem -> fu_0;
+  wtmem -> fu_0 [constraint = false];
+  fu_0 -> dmem;
+  dmem -> fu_1;
+  wtmem -> fu_1 [constraint = false];
+  fu_1 -> dmem;
+  dmem -> fu_2;
+  wtmem -> fu_2 [constraint = false];
+  fu_2 -> dmem;
+  dmem -> output;
+  fu_1 -> wtmem [style = invis];
+}

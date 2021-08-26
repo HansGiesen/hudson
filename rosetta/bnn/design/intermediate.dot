@@ -1,0 +1,74 @@
+digraph bnn
+{
+  graph [rankdir = LR, fontsize = 18, newrank = true];
+  node [shape = box, style = filled, height = 0, fontsize = 18];
+  edge [fontsize = 18];
+
+  input [shape = none, label = "Input", style = ""];
+  dmem_0 [label = "Data\nmemory", fillcolor = "#d9ead3"];
+  subgraph cluster_0
+  {
+    rank = same;
+    label = "Fixed-point\nconvolution";
+    fillcolor = "#fff2cc";
+    style = filled;
+    fu_0 [label = "FU", fillcolor = "#d9d2e9"];
+    wtmem_0 [label = "Weight\nconstants", fillcolor = "#a4c2f4"];
+    wtmem_0 -> fu_0;
+  }
+  dmem_1 [label = "Data\nmemory", fillcolor = "#d9ead3"];
+  subgraph cluster_1
+  {
+    rank = same;
+    label = "Binary\nconvolution 0";
+    fillcolor = "#fce5cd";
+    style = filled;
+    dmem_5 [label = "Data\nmemory", fillcolor = "#d9ead3"];
+    fu_1 [label = "FU", fillcolor = "#d9d2e9"];
+    wtmem_1 [label = "Weight\nconstants", fillcolor = "#a4c2f4"];
+    wtmem_1 -> fu_1;
+    dmem_5 -> fu_1;
+    fu_1 -> dmem_5;
+  }
+  dmem_2 [label = "Data\nmemory", fillcolor = "#d9ead3"];
+  subgraph cluster_2
+  {
+    rank = same;
+    label = "Binary\nconvolution 1";
+    fillcolor = "#fce5cd";
+    style = filled;
+    dmem_6 [label = "Data\nmemory", fillcolor = "#d9ead3"];
+    fu_2 [label = "FU", fillcolor = "#d9d2e9"];
+    wtmem_2 [label = "Weight\nconstants", fillcolor = "#a4c2f4"];
+    wtmem_2 -> fu_2;
+    dmem_6 -> fu_2;
+    fu_2 -> dmem_6;
+  }
+  dmem_3 [label = "Data\nmemory", fillcolor = "#d9ead3"];
+  subgraph cluster_3
+  {
+    rank = same;
+    label = "Binary fully-\nconnected 0";
+    fillcolor = "#f4cccc";
+    style = filled;
+    dmem_7 [label = "Data\nmemory", fillcolor = "#d9ead3"];
+    fu_3 [label = "FU", fillcolor = "#d9d2e9"];
+    wtmem_3 [label = "Weight\nconstants", fillcolor = "#a4c2f4"];
+    wtmem_3 -> fu_3;
+    dmem_7 -> fu_3;
+    fu_3 -> dmem_7;
+  }
+  dmem_4 [label = "Data\nmemory", fillcolor = "#d9ead3"];
+  output [shape = none, label = "Output", style = ""];
+
+  input -> dmem_0;
+  dmem_0 -> fu_0;
+  fu_0 -> dmem_1;
+  dmem_1 -> fu_1;
+  fu_1 -> dmem_2;
+  dmem_2 -> fu_2;
+  fu_2 -> dmem_3;
+  dmem_3 -> fu_3;
+  fu_3 -> dmem_4;
+  dmem_4 -> output;
+}

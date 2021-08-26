@@ -1,0 +1,10 @@
+digraph bnn
+{
+  subgraph cluster_0
+  {
+    label = "Binary convolution 0";
+    fillcolor = "#fce5cd";
+    dmem_0 [label = "Data memory", fillcolor = "#d9ead3"];
+    wtmem_0 [label = "Weight memory", fillcolor = "#d9ead3"];
+  }
+}

@@ -1,0 +1,7 @@
+[submodule "opentuner"]
+	path = opentuner
+	url = git@github.com:HansGiesen/opentuner.git
+	branch = master
+[submodule "platforms"]
+	path = platforms
+	url = git@github.com:HansGiesen/platforms.git

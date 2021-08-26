@@ -1,0 +1,28 @@
+digraph bnn
+{
+  node [shape = box, style = filled, height = 0, fontsize = 18];
+  edge [fontsize = 18];
+
+  input [shape = none, label = "Input", style = ""];
+  fp_conv [label = "Fixed-point convolution layer", fillcolor = "#fff2cc"];
+  bin_conv_0 [label = "Binary convolution layer 0", fillcolor = "#fce5cd"];
+  bin_conv_1 [label = "Binary convolution layer 1", fillcolor = "#fce5cd"];
+  bin_conv_2 [label = "Binary convolution layer 2", fillcolor = "#fce5cd"];
+  bin_conv_3 [label = "Binary convolution layer 3", fillcolor = "#fce5cd"];
+  bin_conv_4 [label = "Binary convolution layer 4", fillcolor = "#fce5cd"];
+  bin_dense_0 [label = "Binary fully-connected layer 0", fillcolor = "#f4cccc"];
+  bin_dense_1 [label = "Binary fully-connected layer 1", fillcolor = "#f4cccc"];
+  bin_dense_2 [label = "Binary fully-connected layer 2", fillcolor = "#f4cccc"];
+  output [shape = none, label = "Output", style = ""];
+
+  input -> fp_conv [label = "  3 images, 32x32 pixels, 20b/pixel"];
+  fp_conv -> bin_conv_0 [label = "  128 feature maps, 32x32, 1b/feature"];
+  bin_conv_0 -> bin_conv_1 [label = "  128 feature maps, 16x16, 1b/feature"];
+  bin_conv_1 -> bin_conv_2 [label = "  256 feature maps, 16x16, 1b/feature"];
+  bin_conv_2 -> bin_conv_3 [label = "  256 feature maps, 8x8, 1b/feature"];
+  bin_conv_3 -> bin_conv_4 [label = "  512 feature maps, 8x8, 1b/feature"];
+  bin_conv_4 -> bin_dense_0 [label = "  512 feature maps, 4x4, 1b/feature"];
+  bin_dense_0 -> bin_dense_1 [label = "  1024 features, 1b/feature"];
+  bin_dense_1 -> bin_dense_2 [label = "  1024 features, 1b/feature"];
+  bin_dense_2 -> output [label = "  4b"];
+}

@@ -1,0 +1,107 @@
+# Some tuner alerts are sent to this e-mail address:
+email_addr: <email address>
+
+# Tuner results database:
+database: 'mysql://<user>:<password>@<hostname>/<database>'
+
+# The following interfaces are used to access the machine(s) on which the
+# builds takes place and the machine connected to the platform.  The default
+# (`local`) uses the same machine as the tuner.
+build_interf: {type: local}
+run_interf:   {type: local}
+
+# Whether to perform the builds in a local directory on the build machine or
+# not.  Local builds will probably not work without code modifications.
+local_storage: false
+
+# The number of logic synthesis jobs used if no core map is specified on the
+# tuner command line.
+max_jobs: 2
+# The number of Vivado implementation threads used if no core map is specified
+# on the tuner command line.
+max_threads: 2
+
+# Assignment of cores to fidelities.  `count` specifies the number of
+# parallel pre-synthesis, logic synthesis, or implementation runs.
+# `max_threads` specifies the number of jobs for a logic synthesis (fidelity
+# 2) and threads for Vivado implementation (fidelity 3).
+core_maps:
+  '4x1.1x2.1x2': [{fidelity: 1, count: 4, max_threads: 1},
+                  {fidelity: 2, count: 1, max_threads: 2},
+                  {fidelity: 3, count: 1, max_threads: 2}]
+  '1x1.2x2.2x2': [{fidelity: 1, count: 1, max_threads: 1},
+                  {fidelity: 2, count: 2, max_threads: 2},
+                  {fidelity: 3, count: 2, max_threads: 2}]
+  '1x1.2x2.3x1': [{fidelity: 1, count: 1, max_threads: 1},
+                  {fidelity: 2, count: 2, max_threads: 2},
+                  {fidelity: 3, count: 3, max_threads: 1}]
+  '1x1.2x2.1x3': [{fidelity: 1, count: 1, max_threads: 1},
+                  {fidelity: 2, count: 2, max_threads: 2},
+                  {fidelity: 3, count: 1, max_threads: 3}]
+  '2x1.2x2.2x1': [{fidelity: 1, count: 2, max_threads: 1},
+                  {fidelity: 2, count: 2, max_threads: 2},
+                  {fidelity: 3, count: 2, max_threads: 1}]
+  '2x1.3x1.3x1': [{fidelity: 1, count: 2, max_threads: 1},
+                  {fidelity: 2, count: 2, max_threads: 2},
+                  {fidelity: 3, count: 2, max_threads: 1}]
+
+# The platform manager is a daemon enabling multiple tuner instances to share a
+# platform.  Following are the host and port on which the platform manager
+# runs:
+platform_manager:
+  hostname: localhost
+  port: 2700
+
+platforms:
+  # Description of the different types of platforms supported by the tuner:
+  types:
+    zcu102:
+      dir: platforms/platforms/2019.1/zcu102
+      luts: 274080
+      regs: 548160
+      dsps: 2520
+      brams: 1824
+      sys_ports: [ps_e_S_AXI_HPC0_FPD, ps_e_S_AXI_HPC1_FPD, ps_e_S_AXI_HP0_FPD,
+                  ps_e_S_AXI_HP1_FPD, ps_e_S_AXI_HP2_FPD, ps_e_S_AXI_HP3_FPD,
+                  ps_e_M_AXI_HPM0_FPD, ps_e_M_AXI_HPM1_FPD, ps_e_M_AXI_HPM0_LPD]
+      clk_freqs: [75.0, 100.0, 150.0, 200.0, 300.0, 400.0, 600.0]
+      proc_freq: 1.2e9
+      axi_bus_width: 128
+    pynq:
+      dir: platforms/platforms/2019.1/pynq
+      luts: 53200
+      regs: 106400
+      dsps: 220
+      brams: 280
+      sys_ports: [processing_system7_0_S_AXI_ACP, processing_system7_0_S_AXI_HP0,
+                  processing_system7_0_S_AXI_HP1, processing_system7_0_S_AXI_HP2,
+                  processing_system7_0_S_AXI_HP3, processing_system7_0_M_AXI_GP0,
+                  processing_system7_0_M_AXI_GP1]
+      clk_freqs: [41.667, 50.0, 100.0, 142.857, 166.667, 200.0]
+      proc_freq: 666666666.6
+      axi_bus_width: 64
+    ultra96:
+      dir: platforms/platforms/2019.1/ultra96
+      luts: 70560
+      regs: 141120
+      dsps: 360
+      brams: 432
+      sys_ports: [zynq_ultra_ps_e_0_S_AXI_HPC0_FPD, zynq_ultra_ps_e_0_S_AXI_HPC1_FPD,
+                  zynq_ultra_ps_e_0_S_AXI_HP0_FPD, zynq_ultra_ps_e_0_S_AXI_HP1_FPD,
+                  zynq_ultra_ps_e_0_S_AXI_HP2_FPD, zynq_ultra_ps_e_0_S_AXI_HP3_FPD,
+                  zynq_ultra_ps_e_0_M_AXI_HPM0_FPD, zynq_ultra_ps_e_0_M_AXI_HPM1_FPD,
+                  zynq_ultra_ps_e_0_M_AXI_HPM0_LPD]
+      clk_freqs: [75.0, 100.0, 150.0, 200.0, 300.0, 400.0, 600.0]
+      proc_freq: 1.2e9
+      axi_bus_width: 128
+
+  # Instances of the tuner described above:
+  instances:
+  - hostname: zcu102_1
+    type: zcu102
+  - hostname: zcu102_2
+    type: zcu102
+  - hostname: pynq_1
+    type: pynq
+  - hostname: ultra96_1
+    type: ultra96
